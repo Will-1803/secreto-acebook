@@ -2,34 +2,46 @@ name: Acebook CI-CD
 run-name: ${{ github.actor }} is running CI-CD processes
 
 on:
-
-    push:
-        branches: [ main ]
-    pull_request:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
-  Run-Tests:
+  test:
     runs-on: ubuntu-latest
 
+    services:
+      mongo:
+        image: mongo:8
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongo --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
-    # 1. Checkout repo
-        - name: Checkout code
-          uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # 2. Setup Node.js (version from README)
-        - name: Setup Node.js
-          uses: actions/setup-node@v4
-          with:
-            node-version: '23'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '23'
 
-    # 3. Install dependencies
-        - name: Install dependencies
-          run: npm ci
-        
-    # 4. Run linter
-        - name: Run ESLint
-          run: npm run lint
+      - name: Install dependencies
+        run: npm ci
 
-    # 5. Run tests
-        - name: Run Jest tests
-          run: npm test
+      - name: Run linter
+        run: npm run lint
+
+      - name: Start test server
+        run: npm run start:test &
+      
+      - name: Wait for server to start
+        run: sleep 5
+
+      - name: Run tests
+        run: npm test
