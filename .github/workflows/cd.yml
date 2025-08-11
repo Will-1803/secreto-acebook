@@ -4,7 +4,7 @@ run-name: CD Ran by ${{ github.actor }}
 on:
   workflow_run:
     workflows: ['CI']
-      types:
+    types:
         - completed
 
 jobs:
