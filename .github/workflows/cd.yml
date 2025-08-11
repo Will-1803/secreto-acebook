@@ -1,11 +1,11 @@
-name: Acebook CI-CD
-run-name: ${{ github.actor }} is running CI-CD processes
+name: CD
+run-name: CD Ran by ${{ github.actor }} 
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
+  workflow_run:
+    workflows: ['CI']
+      types:
+        - completed
 
 jobs:
   test:
