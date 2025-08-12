@@ -8,11 +8,21 @@ on:
         - completed
 
 jobs:
-  test:
+  upload:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Create deployment package
+        run: |
+          zip -r app.zip . -x "*.git*" "node_modules/*" "*.github/*"
+
+      - name: Upload to S3
+        uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: '.'  
