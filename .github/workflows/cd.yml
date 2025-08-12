@@ -1,12 +1,10 @@
 name: CD
-run-name: CD Ran by ${{ github.actor }} 
-
+run-name: CD Ran by ${{ github.actor }}
 on:
   workflow_run:
     workflows: ['CI']
     types:
-        - completed
-
+      - completed
 jobs:
   upload:
     runs-on: ubuntu-latest
@@ -24,5 +22,9 @@ jobs:
           aws configure get default.s3.acl || echo "No default ACL configured"
       - name: Clear default ACL config
         run: aws configure set default.s3.acl ''
-      - name: Sync files to S3
-        run: aws s3 sync ./dirname s3://${{ secrets.AWS_BUCKET }} --delete 
+      - name: Zip deployment package
+        run: |
+          zip -r deploy.zip . -x '*.git*' -x '*.github*' -x 'node_modules/*' -x 'deploy.zip'
+          # You can add/exclude more patterns as needed
+      - name: Upload zip to S3
+        run: aws s3 cp deploy.zip s3://${{ secrets.AWS_BUCKET }}/deploy.zip
