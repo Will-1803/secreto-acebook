@@ -27,4 +27,4 @@ jobs:
           zip -r deploy.zip . -x '*.git*' -x '*.github*' -x 'node_modules/*' -x 'deploy.zip'
           # You can add/exclude more patterns as needed
       - name: Upload zip to S3
-        run: aws s3 cp deploy.zip s3://${{ secrets.AWS_BUCKET }}/deploy.zip
+        run: aws s3 cp deploy.zip s3://secreto-acebook-bucket/deploy.zip
