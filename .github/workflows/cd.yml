@@ -18,5 +18,11 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-west-2
+      - name: Debug AWS CLI config
+        run: |
+          aws --version
+          aws configure get default.s3.acl || echo "No default ACL configured"
+      - name: Clear default ACL config
+        run: aws configure set default.s3.acl ''
       - name: Sync files to S3
-        run: aws s3 sync ./dirname s3://${{ secrets.AWS_BUCKET }} --delete --no-acl
+        run: aws s3 sync ./dirname s3://${{ secrets.AWS_BUCKET }} --delete 
