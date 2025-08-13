@@ -26,3 +26,10 @@ jobs:
           # You can add/exclude more patterns as needed
       - name: Upload zip to S3
         run: aws s3 cp deploy.zip s3://secreto-acebook-bucket/deploy.zip
+
+      - name: Deploy to EC2 via CodeDeploy
+        run: |
+          aws deploy create-deployment \
+            --application-name secreto-cloud-deploy-app \
+            --deployment-group-name secreto-production \
+            --s3-location bucket=secreto-acebook-bucket,key=deploy.zip,bundleType=zip \
