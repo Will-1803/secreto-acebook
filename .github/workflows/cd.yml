@@ -18,10 +18,6 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::664047078509:role/secreto-acebook-role
           aws-region: eu-west-2
-      - name: Debug AWS CLI config
-        run: |
-          aws --version
-          aws configure get default.s3.acl || echo "No default ACL configured"
       - name: Clear default ACL config
         run: aws configure set default.s3.acl ''
       - name: Zip deployment package
