@@ -9,28 +9,18 @@ permissions:
   - object: /home/ec2-user/acebook-app
     owner: ec2-user
     group: ec2-user
-    type: [directory]
     mode: 755
-  - object: /home/ec2-user/acebook-app
-    pattern: "**"
-    owner: ec2-user
-    group: ec2-user
-    type: [file]
-    mode: 644
 
 hooks:
-  BeforeInstall:
-    - location: scripts/stop_server.sh
-      timeout: 300
-      runas: ec2-user
-
   AfterInstall:
     - location: scripts/install_dependencies.sh
       timeout: 300
       runas: ec2-user
-      
-
   ApplicationStart:
     - location: scripts/start_server.sh
+      timeout: 300
+      runas: ec2-user
+  ApplicationStop:
+    - location: scripts/stop_server.sh
       timeout: 300
       runas: ec2-user
