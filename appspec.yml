@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 files:
   - source: /
-    destination: /home/ubuntu/acebook-app
+    destination: /home/ec2-user/acebook-app
     overwrite: true
 
 hooks:
